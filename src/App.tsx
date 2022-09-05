@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
+import {MembersType, Todolist} from "./Todolist";
+
+export type FilterValuesType = "All" | "Unnie" | "Maknae";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    let [blackpinkMembers, setMembers] = useState<Array<MembersType>>( [
+        {id: 1, name: "Jisoo", isMaknae: false},
+        {id: 2, name: "Jennie", isMaknae: false},
+        {id: 3, name: "Rosé", isMaknae: true},
+        {id: 4, name: "Lisa", isMaknae: true}
+    ]);
+
+    let [filter, setFilter] = useState<FilterValuesType>("Unnie");
+
+    function removeMember(id: number) {
+        let filteredBlackpinkMembers = blackpinkMembers.filter(m => m.id !== id)
+        setMembers(filteredBlackpinkMembers);
+    }
+
+    function changeFilter(value: FilterValuesType) {
+        setFilter(value)
+    }
+
+    let blackpinkMembersMaknaeOrUnnie = blackpinkMembers;
+    if(filter === "Maknae") {
+        blackpinkMembersMaknaeOrUnnie = blackpinkMembers.filter(m => m.isMaknae === true);
+    }
+    if(filter === "Unnie") {
+        blackpinkMembersMaknaeOrUnnie = blackpinkMembers.filter(m => m.isMaknae === false);
+    }
+
+    return (
+        <div>
+            <Todolist title="Blackpink members"
+                      members={blackpinkMembersMaknaeOrUnnie}
+                      removeMember={removeMember}
+                      changeFilter={changeFilter}
+            />
+        </div>
+    );
 }
 
 export default App;
